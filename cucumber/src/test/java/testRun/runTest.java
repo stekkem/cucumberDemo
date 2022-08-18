@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
         },
         publish = true,
         monochrome = true,
-        //strict = true,
+        strict = true,
         dryRun = false
 
     )

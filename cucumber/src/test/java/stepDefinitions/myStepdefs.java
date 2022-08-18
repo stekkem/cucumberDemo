@@ -1,32 +1,27 @@
 package test.java.stepDefinitions;
+
+import com.fasterxml.jackson.core.JsonParser;
+import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.it.Data;
-import org.skyscreamer.jsonassert.JSONParser;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
-import io.cucumber.cienvironment.internal.com.eclipsesource.json.JsonArray;
-import io.cucumber.cienvironment.internal.com.eclipsesource.json.JsonObject;
-import io.cucumber.cienvironment.internal.com.eclipsesource.json.JsonParser;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import io.restassured.response.ResponseBodyData;
 import io.restassured.specification.RequestSpecification;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.skyscreamer.jsonassert.JSONParser;
 
-import java.io.IOException;
-import java.util.Map;
+import java.awt.print.Book;
+import java.util.List;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 
 public class myStepdefs {
 
@@ -49,7 +44,7 @@ public class myStepdefs {
         //request = given().accept("application/vnd.github+json");
     }
 
-    @When("^git returns the repositories with (.*)$")
+    @When("^call made with api path (.*)$")
     public void gitReturnsTheRepositories(String path) {
         // String path = ;
         response = request.get(path).then().extract().response();
@@ -67,9 +62,67 @@ public class myStepdefs {
         Assert.assertEquals(true, response.getBody().asString().contains(repo));
         String responseVal;
 
-        //JSONParseKey("node_id");
+
         //System.out.println("****************** " + responseVal );
     }
 
+    @Then("^verify value of (.*) is (.*) at (.*)$")
+    public void verifyValueOfKeyValuePair(String key, String eVal, int location) throws JSONException {
+        String aVal = JSONParseKey(key, location);
+        Assert.assertEquals(eVal,aVal);
+    }
+
+
+    public String JSONParseKey(String pKey, int location) throws JSONException {
+
+  /*      // Parse json object for user data
+        System.out.println(response.getClass());
+        String jsonStr = response.getBody().asString();
+        System.out.println(jsonStr.getClass());
+
+*/
+        String keyVal="";
+        String jsonStr = response.getBody().asString();
+        System.out.println("payload: " + jsonStr);
+
+            List<String> values = response.jsonPath().getList(pKey);
+            System.out.println("no of occurrences of " + pKey + " in payload: " + values.size());
+            keyVal = values.get(location);
+
+
+
+
+        //System.out.println(response.asString());
+        //JsonPath payload = new JsonPath(response.asString());
+        //keyVal=payload.getString(pKey);
+
+
+
+       // System.out.println("########################:    " + keyVal);
+        return keyVal;
+        /*
+        //get values of JSON array after getting array size
+        int s = j.getInt("owner.size()");
+        for(int i = 0; i < s; i++) {
+            String state = j.getString("login["+i+"]");
+            System.out.println(state);
+        }
+
+        JSONObject jsonResp = new JSONObject(jsonStr.toString());
+
+        // Get json array
+        JSONArray getArray = jsonResp.getJSONArray("owner");
+
+        // Get json object
+        JSONObject arrayItem = getArray.getJSONObject(0);
+
+        // Print and display commands
+        System.out.println(
+                String.format("login - %s", arrayItem.get("login")));
+
+        // return sampleJson;
+
+         */
+    }
 
 }
