@@ -1,7 +1,7 @@
-
+@mytest
 Feature: Get all repositories from github
 # adminToken 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
-  @mytest
+
   Scenario Outline: <testId> do a get call to get repositories and check response
 
     Given when user tries to get repositories from <URL>
@@ -24,7 +24,7 @@ Feature: Get all repositories from github
     And passes authentication token with requests <token>
     When call made with api path <path>
     Then validate the response code is <code>
-    Then verify value of <key> is <value>
+    Then check payload of <key> is <value>
     Examples:
       |testId | URL   | token | path | code | key | value |
       |4      |http://api.github.com   | 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 |/users/stekkem  | 200 |login  | stekkem             |

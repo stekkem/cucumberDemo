@@ -71,34 +71,29 @@ public class myStepdefs {
         String aVal = JSONParseKey(key, location);
         Assert.assertEquals(eVal,aVal);
     }
-
-
+    @Then("^check payload of (.*) is (.*)$")
+    public void checkPayloadValueOfKey(String key, String eVal) throws JSONException {
+        int location = 99999;
+        String aVal = JSONParseKey(key, location);
+        Assert.assertEquals(eVal,aVal);
+    }
     public String JSONParseKey(String pKey, int location) throws JSONException {
 
-  /*      // Parse json object for user data
-        System.out.println(response.getClass());
-        String jsonStr = response.getBody().asString();
-        System.out.println(jsonStr.getClass());
-
-*/
         String keyVal="";
         String jsonStr = response.getBody().asString();
-        System.out.println("payload: " + jsonStr);
-
+        //System.out.println("payload: " + jsonStr);
+        if (location == 99999){
+            keyVal = response.jsonPath().getString(pKey);
+            return keyVal;
+        }
             List<String> values = response.jsonPath().getList(pKey);
             System.out.println("no of occurrences of " + pKey + " in payload: " + values.size());
             keyVal = values.get(location);
-
-
-
 
         //System.out.println(response.asString());
         //JsonPath payload = new JsonPath(response.asString());
         //keyVal=payload.getString(pKey);
 
-
-
-       // System.out.println("########################:    " + keyVal);
         return keyVal;
         /*
         //get values of JSON array after getting array size
@@ -124,5 +119,7 @@ public class myStepdefs {
 
          */
     }
+
+
 
 }
