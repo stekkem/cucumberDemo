@@ -17,8 +17,8 @@ testRun will have a file used to run tests and class files for common variables,
 10. add any specific headers that might apply to your application in commonValues class
 11. there is a function/method to read values from config.properties, hence can add properties here
     update path to config.properties in commonValues
-13. some common functions/methods have samples on how to call them. these are run with @debug tag
-14. pom.xml should have all the dependencies to run the tests in this framework. you might have to add dependencies if needed for other applications
-15. to run tests without passing the hostname in the request, update baseUrl in commonValues
+12. some common functions/methods have samples on how to call them. these are run with @debug tag
+13. pom.xml should have all the dependencies to run the tests in this framework. you might have to add dependencies if needed for other applications
+14. to run tests without passing the hostname in the request, update baseUrl in commonValues
 
 every time updated code is checked into git, if the tests here are being run, a new token has to be generated from git. else tests will fail
