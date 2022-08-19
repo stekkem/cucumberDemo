@@ -33,7 +33,7 @@ public class myStepdefs {
     public void gitReturnsTheRepositories(String path) {
         response = request.get(path).then().extract().response();
         String jsonStr = response.getBody().asString();
-        System.out.println("payload: " + jsonStr);
+        //System.out.println("payload: " + jsonStr);
     }
 
     @Then("^validate the response code is (.*)$")
@@ -94,11 +94,6 @@ public class myStepdefs {
         Assert.assertEquals(response.getStatusCode(), statusCode.sc_post );
 
     }
-    @When("^check post call response is 200")
-    public void statusOfaPutCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
-
-    }
     @When("^a put call is made with (.*) to (.*)$")
     public void aPutCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
         response = given()
@@ -107,5 +102,36 @@ public class myStepdefs {
                 .body(payload)
                 .when()
                 .put(req);
+    }
+    @When("^check put call response is 200")
+    public void statusOfaPutCallIsMadeWithRequest() {
+        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
+
+    }
+    @When("^a patch call is made with (.*) to (.*)$")
+    public void aPatchCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
+        response = given()
+                .header("Content-type", commonValues.contentType)
+                .and()
+                .body(payload)
+                .when()
+                .patch(req);
+    }
+    @When("^check patch call response is 200")
+    public void statusOfaPatchCallIsMadeWithRequest() {
+        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
+
+    }
+    @When("^a delete call is made with (.*)$")
+    public void aDeleteCallIsMadeWithPayloadToRequest(String req) throws JSONException {
+        response = given()
+                .header("Content-type", commonValues.contentType)
+                .when()
+                .delete(req);
+    }
+    @When("^check delete call response is 204")
+    public void statusOfaDeleteCallIsMadeWithRequest() {
+        Assert.assertEquals(response.getStatusCode(), statusCode.sc_delete );
+
     }
 }

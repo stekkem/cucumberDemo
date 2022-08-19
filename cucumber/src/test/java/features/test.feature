@@ -11,7 +11,7 @@ Feature: Get all repositories from github
     Then verify value of <key> is <value> at <location>
     Examples:
       |testId |URL                   |  path          | code|repo                                            |value       |key               |location|
-      |1      |http://api.github.com |  /user/repos   | 200 |git://github.com/stekkem/cucumberDemo.git       |stekkem     |owner.login       |0|
+      |0      |http://api.github.com |  /user/repos   | 200 |git://github.com/stekkem/cucumberDemo.git       |stekkem     |owner.login       |0|
 
 # multiple arrays in response payload
   Scenario Outline: <testId> do a get call to get repositories and check response
@@ -78,8 +78,28 @@ Feature: Get all repositories from github
   Scenario Outline: <testId> put call with two key value pairs
     Given when user makes an api call using <URL>
     When a put call is made with <payload> to <request>
-    Then check post call response is 200
+    Then check put call response is 200
     Examples:
       |testId  | URL              |payload                               | request    |
       |11      |https://reqres.in/|{"name":"cucumber","job":"testPut"}   |/api/users/2|
       |12      |https://reqres.in/|{"name":"restassured","job":"testPut"}|/api/users/2|
+
+# patch call example with payload
+  Scenario Outline: <testId> patch call with two key value pairs
+    Given when user makes an api call using <URL>
+    When a patch call is made with <payload> to <request>
+    Then check patch call response is 200
+    Examples:
+      |testId  | URL              |payload                               | request    |
+      |13      |https://reqres.in/|{"name":"cucumber","job":"testPatch"}   |/api/users/2|
+      |14      |https://reqres.in/|{"name":"restassured","job":"testPatch"}|/api/users/2|
+
+# delete call example with payload
+  Scenario Outline: <testId> delete call with two key value pairs
+    Given when user makes an api call using <URL>
+    When a delete call is made with <request>
+    Then check delete call response is 204
+    Examples:
+      |testId  | URL              | request    |
+      |15      |https://reqres.in/|/api/users/2|
+      |16      |https://reqres.in/|/api/users/2|
