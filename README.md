@@ -16,7 +16,7 @@ data package will have test data files.
 
 pom.xml and config.properties will be at root level.
 
-==========================================================================================================
+=======================================================================================================
 **To run tests on your local machine** with minimum changes
 necessary dependencies are added in pom.xml. there shouldn't be any changes necessary to IDE
 
