@@ -1,6 +1,7 @@
 # cucumber-RestAssured automation framework 
 Use this cucumber/reseassured based framework to get a head start with automation needs or can be used to get some understanding on how to get started. 
 its a general purpuse framework. Can be easily updated to work with any API automation
+
 **General Info:**
 
 src/test.java is where most of the files recide. 
