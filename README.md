@@ -4,10 +4,15 @@ Use this cucumber/reseassured based framework to get a head start with automatio
 **General Info:**
 
 src/test.java is where most of the files recide. 
+
 features packages will have all *.feature files (cucumber).
+
 stepDefinitions package will have reatassured functions/methods.
+
 testRun package will have a file used to run tests and class files for common variables, common methods etc.
+
 data package will have test data files.
+
 pom.xml and config.properties will be at root level.
 
 =======================================================================================================
