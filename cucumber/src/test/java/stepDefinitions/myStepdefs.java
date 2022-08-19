@@ -48,7 +48,8 @@ public class myStepdefs {
     public void gitReturnsTheRepositories(String path) {
         // String path = ;
         response = request.get(path).then().extract().response();
-
+        String jsonStr = response.getBody().asString();
+        System.out.println("payload: " + jsonStr);
     }
 
     @Then("^validate the response code is (.*)$")
@@ -71,7 +72,7 @@ public class myStepdefs {
         String aVal = JSONParseKey(key, location);
         Assert.assertEquals(eVal,aVal);
     }
-    @Then("^check payload of (.*) is (.*)$")
+    @Then("^check payload value of (.*) is (.*)$")
     public void checkPayloadValueOfKey(String key, String eVal) throws JSONException {
         int location = 99999;
         String aVal = JSONParseKey(key, location);
@@ -81,7 +82,7 @@ public class myStepdefs {
 
         String keyVal="";
         String jsonStr = response.getBody().asString();
-        //System.out.println("payload: " + jsonStr);
+
         if (location == 99999){
             keyVal = response.jsonPath().getString(pKey);
             return keyVal;
