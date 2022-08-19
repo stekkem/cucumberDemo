@@ -1,8 +1,8 @@
 @mytest
 Feature: Get all repositories from github
-@debug
+@debug # use debug tag in runTest.java to debug any single case using the scenario below
   # multiple arrays in response payload
-  Scenario Outline: <testId> do a get call to get repositories and check response
+  Scenario Outline: <testId> debug a test case
 
     Given when user makes an api call using <URL>
     When call made with api path <path>
@@ -74,4 +74,12 @@ Feature: Get all repositories from github
     |9       |https://reqres.in/|{"name":"cucumber","job":"tester"}   |/api/users|
     |10      |https://reqres.in/|{"name":"restassured","job":"tester"}|/api/users|
 
-
+# put call example with payload
+  Scenario Outline: <testId> put call with two key value pairs
+    Given when user makes an api call using <URL>
+    When a put call is made with <payload> to <request>
+    Then check post call response is 200
+    Examples:
+      |testId  | URL              |payload                               | request    |
+      |11      |https://reqres.in/|{"name":"cucumber","job":"testPut"}   |/api/users/2|
+      |12      |https://reqres.in/|{"name":"restassured","job":"testPut"}|/api/users/2|

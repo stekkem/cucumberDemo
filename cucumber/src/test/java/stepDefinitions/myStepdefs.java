@@ -94,5 +94,18 @@ public class myStepdefs {
         Assert.assertEquals(response.getStatusCode(), statusCode.sc_post );
 
     }
+    @When("^check post call response is 200")
+    public void statusOfaPutCallIsMadeWithRequest() {
+        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
 
+    }
+    @When("^a put call is made with (.*) to (.*)$")
+    public void aPutCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
+        response = given()
+                .header("Content-type", commonValues.contentType)
+                .and()
+                .body(payload)
+                .when()
+                .put(req);
+    }
 }
