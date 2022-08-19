@@ -5,7 +5,7 @@ feature packages will have all *.feature files (cucumber)
 stepDefinitions will have reatassured functions/methods
 testRun will have a file used to run tests and class files for common variables, common methods etc
 
-====================================================================================================
+=======================================================================================================
 To run on your local machine tests with minimum changes
 necessary dependencies are added in pom.xml. there shouldn't be any changes necessary to IDE
 
