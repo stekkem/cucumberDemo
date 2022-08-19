@@ -22,8 +22,8 @@ necessary dependencies are added in pom.xml. there shouldn't be any changes nece
 
 1. download git repository
 2. clone the repository to your git account
-3. generate a token on git and update token in commonValues 
-4. update configFile and dataFilePath path values to your locations
+3. generate a token on git and update commonValues.token in commonValues 
+4. update commonValues.configFile and commonValues.dataFilePath path values to your locations
 5. update repo, path, request variable values that have user/account details in test.feature/test1.feature. change "stekkem" to your account on git
 ====================================================================================================
 **other helpful tips**
