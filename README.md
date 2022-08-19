@@ -1,12 +1,10 @@
 # cucumberDemo
-
-This is a sample cucumber/reseassured based framework that helps to get a head start with automation needs or just to get some understanding on how to get started
+cucumber/reseassured based framework that helps to get a head start with automation needs or just to get some understanding on how to get started
 src/test.java is where most of the files
 feature packages will have all *.feature files (cucumber)
 stepDefinitions will have reatassured functions/methods
 testRun will have a file used to run tests and class files for common variables, common methods etc
 
-To successfully run the tests,
 1. download from git
 2. upload it to your own git account
 3. generate a token on git
