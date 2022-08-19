@@ -15,6 +15,7 @@ import io.restassured.specification.SpecificationQuerier;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.skyscreamer.jsonassert.JSONCompareResult;
 import test.java.testRun.commonMethods;
 import test.java.testRun.commonValues;
 import test.java.testRun.statusCode;
@@ -46,6 +47,12 @@ public class myStepdefs {
         System.out.println("getMethod is: " + queryable.getMethod());
         */
 
+    }
+    @Given("^when user makes an api call getting url from config file (.*)$")
+    public void whenUserMakesAnApiCallGettingUrlFromConfigFileProperty(String property) {
+        String propertyVal = commonMethods.getCofingProperty(property);
+        RestAssured.baseURI = propertyVal;
+        request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
     }
     @Given("^when user makes an api call using (.*)")
     public void whenUserTriesToGetRepositoriesFromURL(String url) {
@@ -225,8 +232,24 @@ public class myStepdefs {
 
     @Then("^verify response payload from file (.*) and ignore keys (.*)$")
     public void verifyResponsePayloadFromFileResponseFile(String expFile, String ignoreKeys) throws JSONException {
-        String epayload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+expFile);
-        System.out.println("payload in file " + expFile + " is: " + epayload);
-        commonMethods.compareMyJSON(epayload, response.getBody().asString(),ignoreKeys);
+        String ePayload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+expFile);
+        String aPayload = response.getBody().asString();
+        //System.out.println("expected payload is: " + ePayload);
+        //System.out.println("actual payload is  : " + aPayload);
+        if (commonMethods.isValidJSON(ePayload)){
+            System.out.println("JSON EXPECTED is valid");
+            if(commonMethods.isValidJSON(aPayload)){
+                System.out.println("JSON ACTUAL is valid");
+                JSONCompareResult result = commonMethods.compareMyJSON(ePayload, aPayload,ignoreKeys);
+                commonMethods.verifyJSONCompareResponse(result, ePayload, aPayload);
+            }else {
+                System.out.println("invalid JSON " + aPayload);
+            }
+        }else {
+            System.out.println("invalid JSON " + ePayload);
+        }
+
     }
+
+
 }
