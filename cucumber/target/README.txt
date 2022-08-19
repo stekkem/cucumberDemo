@@ -18,3 +18,5 @@ To successfully run the tests,
 11. there is a function/method to read values from config.properties, hence can add properties here
 13. some common functions/methods have samples on how to call them. these are run with @debug tag
 14. pom.xml should have all the dependencies to run the tests in this framework. you might have to add dependencies if needed for other applications
+
+every time updated code is checked into git, if the tests here are being run, a new token has to be generated from git. else tests will fail
