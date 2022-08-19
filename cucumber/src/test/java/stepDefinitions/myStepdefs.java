@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import test.java.testRun.statusCode;
 
 import java.awt.print.Book;
 import java.util.List;
@@ -31,10 +32,7 @@ public class myStepdefs {
     ResponseBody body;
 
     ResponseBodyData bodyData;
-
-
-
-    @Given("^when user tries to get repositories from (.*)")
+    @Given("^when user makes an api call using (.*)")
     public void whenUserTriesToGetRepositoriesFromURL(String url) {
        RestAssured.baseURI = url;
     }
@@ -54,7 +52,7 @@ public class myStepdefs {
 
     @Then("^validate the response code is (.*)$")
     public void validateTheResponseCodeIsCode(int code) {
-        Assert.assertEquals(code, response.getStatusCode());
+        Assert.assertEquals(response.getStatusCode(),statusCode.sc_get);
         //body = response.getBody();
     }
 
@@ -121,6 +119,27 @@ public class myStepdefs {
          */
     }
 
+    @Then("^verify key (.*) has value (.*) using jsonpath$")
+    public void verifyKeyValuePairUsingJsonPathPath(String jsonpath, String eVal) {
+        JsonPath jp = response.jsonPath();
+        Assert.assertEquals(eVal.toString(), jp.get(jsonpath).toString());
 
+    }
+
+    @And("^a post call is made with (.*) to (.*)$")
+    public void usingKeyAndValuePayload(String payload, String req) throws JSONException {
+        response = given()
+                .header("Content-type", "application/json")
+                .and()
+                .body(payload)
+                .when()
+                .post(req);
+    }
+
+    @When("^check post call response is 201")
+    public void statusOfaPostCallIsMadeWithRequest() {
+        Assert.assertEquals(response.getStatusCode(), statusCode.sc_post );
+
+    }
 
 }
