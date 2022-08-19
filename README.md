@@ -5,11 +5,17 @@ feature packages will have all *.feature files (cucumber)
 stepDefinitions will have reatassured functions/methods
 testRun will have a file used to run tests and class files for common variables, common methods etc
 
-1. download from git
-2. upload it to your own git account
-3. generate a token on git
-4. to run the tests update token in commonValues class.
-5. some of the tests will have requests with username, change the requests to match your user
+To run on your local machine tests with minimum changes
+necessary dependencies are added in pom.xml. there shouldn't be any changes necessary to IDE
+
+1. download git repository
+2. clone the repository to your git account
+3. generate a token on git and update token in commonValues 
+4. update configFile and dataFilePath path values to your locations
+5. update repo, path, request variable values that have user/account details in test.feature/test1.feature. change "stekkem" to your account on git
+
+
+
 6. some common methods do not have a test case, but might work as is or with very little tweaks
 7. set runTest tag to @mytest run the complete suite
 8. test.feature file has a test for debugging purpose. to run just one test to debug, update Example, set tag in runTest to @debug
