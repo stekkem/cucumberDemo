@@ -3,10 +3,10 @@ Use this cucumber/reseassured based framework to get a head start with automatio
 
 **General Info:**
 
-src/test.java is where most of the files recide 
-feature packages will have all *.feature files (cucumber)
-stepDefinitions will have reatassured functions/methods
-testRun will have a file used to run tests and class files for common variables, common methods etc
+src/test.java is where most of the files recide. 
+feature packages will have all *.feature files (cucumber).
+stepDefinitions will have reatassured functions/methods.
+testRun will have a file used to run tests and class files for common variables, common methods etc.
 
 =======================================================================================================
 **To run tests on your local machine** with minimum changes
