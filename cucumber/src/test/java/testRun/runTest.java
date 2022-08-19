@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 
         features = {"src/test/java/features"},
         glue = {"/test/java/stepDefinitions"},
-        tags = "@mytest",
+        tags = "@mytest1 and @debug or @mytest",
         plugin = {
                 "pretty",
                 "html:/Users/stekkem/Documents/Reports/report.html",

@@ -9,7 +9,9 @@ import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.SpecificationQuerier;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -20,6 +22,9 @@ import test.java.testRun.statusCode;
 import java.io.File;
 import java.util.List;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.requestSpecification;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class myStepdefs {
 
@@ -29,14 +34,34 @@ public class myStepdefs {
 
     @Given("^when user makes a api call using url from commonValues")
     public void whenUserMakesAPIFromcommonValuesUrl(){
-        RestAssured.baseURI = commonValues.baseUrl;
+        RestAssured.baseURI = commonValues.baseUrlGit;
         request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
+        // uncomment code below to print request details in the logs
+        /*
+        QueryableRequestSpecification queryable = SpecificationQuerier.query(request);
+        System.out.println("getHeaders is: " + queryable.getHeaders().get("x-api-key"));
+        System.out.println("getBaseUri is: " + queryable.getBaseUri());
+        System.out.println("getBasePath is: " + queryable.getBasePath());
+        System.out.println("getURI is: " + queryable.getURI());
+        System.out.println("getMethod is: " + queryable.getMethod());
+        */
+
     }
     @Given("^when user makes an api call using (.*)")
     public void whenUserTriesToGetRepositoriesFromURL(String url) {
        RestAssured.baseURI = url;
        request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
 
+        // uncomment code below to print request details in the logs
+        /*
+        QueryableRequestSpecification queryable = SpecificationQuerier.query(request);
+        System.out.println("getHeaders is: " + queryable.getHeaders().get("x-api-key"));
+        System.out.println("getBaseUri is: " + queryable.getBaseUri());
+        System.out.println("getBasePath is: " + queryable.getBasePath());
+        System.out.println("getURI is: " + queryable.getURI());
+        System.out.println("getMethod is: " + queryable.getMethod());
+        */
+/*
     // run with @debug tag to test the commonMethods
     // methods may have username in the file/directory. need to adjust to match the file path in test
        File newFile = commonMethods.renameFile("/Users/stekkem/jmeter","log");
@@ -47,7 +72,7 @@ public class myStepdefs {
        System.out.println("########################: " + readFile);
        String propertyVal = commonMethods.getCofingProperty("sleepMedium");
        System.out.println("########################: " + propertyVal);
-
+*/
     }
     @And("^passes authentication token with requests (.*)$")
     public void passesAuthenticationTokenWithRequestsToken(String token) {
@@ -57,6 +82,16 @@ public class myStepdefs {
     @When("^call made with api path (.*)$")
     public void gitReturnsTheRepositories(String path) throws JSONException {
         response = request.get(path).then().extract().response();
+        // uncomment code below to print request details in the logs
+
+        QueryableRequestSpecification queryable = SpecificationQuerier.query(request);
+        System.out.println("getHeaders is: " + queryable.getHeaders().get("x-api-key"));
+        System.out.println("getBaseUri is: " + queryable.getBaseUri());
+        System.out.println("getBasePath is: " + queryable.getBasePath());
+        System.out.println("getURI is: " + queryable.getURI());
+        System.out.println("getMethod is: " + queryable.getMethod());
+
+
         String jsonStr = response.getBody().asString();
 
         // run with @debug tag to test the commonMethods
@@ -67,7 +102,8 @@ public class myStepdefs {
 
     @Then("^validate the response code is (.*)$")
     public void validateTheResponseCodeIsCode(int code) {
-        Assert.assertEquals(response.getStatusCode(),statusCode.sc_get);
+        Assert.assertEquals(statusCode.sc_ok, response.getStatusCode());
+
     }
     @Then("^check a repo is returned in response (.*)$")
     public void checkARepoIsReturnedInResponseRepo(String repo) throws JSONException {
@@ -102,9 +138,11 @@ public class myStepdefs {
     }
 
     @Then("^verify key (.*) has value (.*) using jsonpath$")
-    public void verifyKeyValuePairUsingJsonPathPath(String jsonpath, String eVal) {
+    public void verifyKeyValuePairUsingJsonPath(String key, String eVal) {
         JsonPath jp = response.jsonPath();
-        Assert.assertEquals(eVal.toString(), jp.get(jsonpath).toString());
+        Assert.assertEquals(eVal.toString(), jp.get(key).toString());
+        // another way to check value of a key
+        // assertThat(jp.get(key), equalTo(eVal)); // not tested
 
     }
 
@@ -117,12 +155,16 @@ public class myStepdefs {
                 .when()
                 .post(req);
     }
-
-    @When("^check post call response is 201")
-    public void statusOfaPostCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_post );
+    @When("^check post call response is 200")
+    public void statusOfaPost200CallIsMadeWithRequest() {
+        Assert.assertEquals(statusCode.sc_ok, response.getStatusCode());
+    }
+    @When("^verify github post call response")
+    public void verifygithubpost201callresponse() {
+        Assert.assertEquals(statusCode.sc_post, response.getStatusCode());
 
     }
+
     @When("^a put call is made with (.*) to (.*)$")
     public void aPutCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
         response = given()
@@ -134,7 +176,7 @@ public class myStepdefs {
     }
     @When("^check put call response is 200")
     public void statusOfaPutCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
+        Assert.assertEquals(statusCode.sc_ok , response.getStatusCode());
 
     }
     @When("^a patch call is made with (.*) to (.*)$")
@@ -148,12 +190,12 @@ public class myStepdefs {
     }
     @When("^check get call response is 200")
     public void statusOfaGetCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
+        Assert.assertEquals(statusCode.sc_ok,response.getStatusCode());
 
     }
     @When("^check patch call response is 200")
     public void statusOfaPatchCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_get );
+        Assert.assertEquals(statusCode.sc_ok, response.getStatusCode() );
 
     }
     @When("^a delete call is made with (.*)$")
@@ -165,7 +207,26 @@ public class myStepdefs {
     }
     @When("^check delete call response is 204")
     public void statusOfaDeleteCallIsMadeWithRequest() {
-        Assert.assertEquals(response.getStatusCode(), statusCode.sc_delete );
+        Assert.assertEquals(statusCode.sc_delete, response.getStatusCode() );
 
+    }
+
+    @When("^a post request sent with payload (.*) from file to (.*)$")
+    public void aPostRequestSentWithPayloadPayloadFromFileToRequest(String payloadFile, String req) {
+        String payload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+payloadFile);
+        System.out.println("payload in file " + payloadFile + " is: " + payload);
+        response = given()
+                .header("Content-type", commonValues.contentType)
+                .and()
+                .body(payload)
+                .when()
+                .post(req);
+    }
+
+    @Then("^verify response payload from file (.*) and ignore keys (.*)$")
+    public void verifyResponsePayloadFromFileResponseFile(String expFile, String ignoreKeys) throws JSONException {
+        String epayload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+expFile);
+        System.out.println("payload in file " + expFile + " is: " + epayload);
+        commonMethods.compareMyJSON(epayload, response.getBody().asString(),ignoreKeys);
     }
 }

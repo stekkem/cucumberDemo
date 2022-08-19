@@ -62,7 +62,7 @@ public class commonMethods {
         }
     }
     // Method to look for a pattern in the input string and return true/false - no example in framework
-    public boolean findRegEx(String input, String rpattern) {
+    public static boolean findRegEx(String input, String rpattern) {
         // Compile regular expression
         Pattern pattern = Pattern.compile(rpattern);
         // Match regex against input
@@ -78,7 +78,7 @@ public class commonMethods {
         return matcher.find();
     }
     // method to compare JSONs and return results of comparison - returns JSONCompareResult object - no example in framework
-    public JSONCompareResult compareMyJSON(String expResponseBody, String actualResponseBody, @Nullable String ignoreKey) throws JSONException {
+    public static JSONCompareResult compareMyJSON(String expResponseBody, String actualResponseBody, @Nullable String ignoreKey) throws JSONException {
 
         String[] ignoreKeys = {"NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY","NOKEY"};
         String[] tempKeys = ignoreKey.split(",");
@@ -110,7 +110,7 @@ public class commonMethods {
 
 
     // Method to take response of compareMyJSON and process asserts - no example in framework
-    public void verifyJSONCompareResponse(JSONCompareResult result, String expResponseBody, String actualResponseBody) throws JSONException {
+    public static void verifyJSONCompareResponse(JSONCompareResult result, String expResponseBody, String actualResponseBody) throws JSONException {
         boolean mR1=false;
         boolean mR2=false;
         String resultString = result.toString();

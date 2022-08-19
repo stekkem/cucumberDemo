@@ -75,7 +75,7 @@ Feature: Get all repositories from github
   Scenario Outline: <testId> post call with two key value pairs
     Given when user makes an api call using <URL>
     When a post call is made with <payload> to <request>
-    Then check post call response is 201
+    Then verify github post call response
     Examples:
     |testId  | URL              |payload                              | request  |
     |9       |https://reqres.in/|{"name":"cucumber","job":"tester"}   |/api/users|
@@ -121,3 +121,13 @@ Feature: Get all repositories from github
     |17      |https://reqres.in/|/api/users?page=2|
     |18      |https://reqres.in/|/api/users/2|
 
+
+# post call example with payload from text file - site used for testing: https://reqres.in/
+  Scenario Outline: <testId> post call with two key value pairs
+    Given when user makes an api call using <URL>
+    When a post request sent with payload <payload> from file to <request>
+    Then verify github post call response
+    Examples:
+      |testId  | URL              |payload    | request    |
+      |19      |https://reqres.in/|test19.txt |/api/users/2|
+      |20      |https://reqres.in/|test20.txt |/api/users/2|
