@@ -10,6 +10,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.json.JSONException;
 import org.junit.Assert;
+import test.java.testRun.commonValues;
 import test.java.testRun.statusCode;
 import java.util.List;
 import static io.restassured.RestAssured.given;
@@ -18,14 +19,14 @@ public class myStepdefs {
 
     RequestSpecification request;
     Response response;
-
     @Given("^when user makes an api call using (.*)")
     public void whenUserTriesToGetRepositoriesFromURL(String url) {
        RestAssured.baseURI = url;
+       request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
     }
     @And("^passes authentication token with requests (.*)$")
     public void passesAuthenticationTokenWithRequestsToken(String token) {
-        request = given().auth().oauth2(token).accept("application/vnd.github+json");
+        request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
     }
 
     @When("^call made with api path (.*)$")
@@ -39,13 +40,11 @@ public class myStepdefs {
     public void validateTheResponseCodeIsCode(int code) {
         Assert.assertEquals(response.getStatusCode(),statusCode.sc_get);
     }
-
     @Then("^check a repo is returned in response (.*)$")
     public void checkARepoIsReturnedInResponseRepo(String repo) throws JSONException {
         Assert.assertEquals(true, response.getBody().asString().contains(repo));
 
     }
-
     @Then("^verify value of (.*) is (.*) at (.*)$")
     public void verifyValueOfKeyValuePair(String key, String eVal, int location) throws JSONException {
         String aVal = JSONParseKey(key, location);
@@ -83,7 +82,7 @@ public class myStepdefs {
     @And("^a post call is made with (.*) to (.*)$")
     public void usingKeyAndValuePayload(String payload, String req) throws JSONException {
         response = given()
-                .header("Content-type", "application/json")
+                .header("Content-type", commonValues.contentType)
                 .and()
                 .body(payload)
                 .when()
