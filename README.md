@@ -1,4 +1,4 @@
-# cucumberDemo
+# cucumber-RestAssured 
 cucumber/reseassured based framework that helps to get a head start with automation needs or just to get some understanding on how to get started
 src/test.java is where most of the files
 feature packages will have all *.feature files (cucumber)
