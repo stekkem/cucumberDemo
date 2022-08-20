@@ -13,7 +13,7 @@ Feature: Get all repositories from github
       |000    |http://api.github.com |  /user/repos   | 200 |git://github.com/stekkem/cucumberDemo.git     |stekkem     |owner.login       |0|
 
 # post call example with payload from text file - site used for testing: https://reqres.in/
-
+# make changes to values in the payload
   Scenario Outline: <testId> post call with two key value pairs
     Given when user makes an api call using <URL>
     When a post request sent with payload <payload> from file to <request>

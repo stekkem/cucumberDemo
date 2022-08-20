@@ -251,17 +251,10 @@ public class commonMethods {
         System.out.println("payload in file " + fileName + " is: " + payload);
 
         JSONObject json = new JSONObject(payload);
+        // modified key/value pairs are saved to newjson object
         JSONObject newjson = new JSONObject();
         JSONArray arrayNames = commonMethods.printResponseJSONObjects(json);
-        System.out.println("arrays in payload: " + arrayNames.toString());
-        boolean isJsonObject = false;
-        boolean isJsonArray = false;
-       // JSONArray tempArray = json.getJSONArray("marketingDatabasesDefinition");
-       // System.out.println(json.getJSONArray("marketingDatabasesDefinition"));
-        JSONObject subJson = new JSONObject();
-        JSONArray subArray = new JSONArray();
         for(int i = 0; i < json.names().length(); i++){
-
             String key = json.names().getString(i);
             String value = String.valueOf(json.get(json.names().getString(i)));
 
@@ -275,42 +268,43 @@ public class commonMethods {
                     newjson.put(key, value);
             }
         }
+        for(int i = 0; i < arrayNames.length(); i++){
+            String key = arrayNames.getString(i);
+            String value = String.valueOf(json.get(arrayNames.getString(i)));
 
+            if ( value.equals("true") || value.equals("false") || value.contains("http") || key.contains("date") || key.contains("time") || value.contains("{[") || value.contains("[") || value.contains("{\\") || value.contains("{") || value.contains(":{")    ){
+                value = value;
+                newjson.put(key, value);
+            }else {
+                value = value + Math.random();
+                newjson.put(key, value);
+            }
+        }
         return newjson.toString();
     }
 
 
     public static String generateDynamicPayloadRegEx(String payload){
         String dynamicPayload = "";
-       // String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+fileName);
-       // System.out.println("payload in file " + fileName + " is: " + payload);
-        int min = 0;
-        int max = 0;
-
+        int min=0;
+        int max=9;
         //Generate random int value from 50 to 100
         dynamicPayload = payload;
         int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
         String[] vowelArray = new String[]{"a", "e", "i", "o","u"};
-        for(int i=0; i<10; i++){
-            min=1;
-            max=9;
-            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
-            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
-        }
-        for(int i=11; i<100; i++){
-            min=10;
-            max=99;
-            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
-            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
-        }
-        for(int i=100; i<1000; i++){
-            min=101;
-            max=999;
-            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
-            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
-        }
 
-
+        for(int i=0; i<1000; i++){
+            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
+            if (i==10){
+                min=11;
+                max=99;
+            }
+            if (i==100){
+                min=101;
+                max=999;
+            }
+        }
         return dynamicPayload;
     }
 //############################################################################################################################################################################################################
