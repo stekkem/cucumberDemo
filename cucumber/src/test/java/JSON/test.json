@@ -1,1 +1,36 @@
-{"name":"cucumber","job":"fromFile1"}
+{
+  "name":"ST 1000 Source",
+  "description":"ST 1000 Source",
+  "providerName":"IBM",
+  "url":"http://10.124.80.139:7780/timedevent",
+  "endpointTypes":{
+    "event":{
+      "source":{
+        "enabled":true
+      }
+    }
+  },
+  "marketingDatabasesDefinition":{
+    "marketingDatabases":[
+      {
+        "name":"marketingDBSource1",
+        "identifiers":[
+
+          {
+            "name":"business",
+            "type":"contactinfo"
+
+          }
+        ],
+        "attributes":[
+          {
+            "name":"attr",
+            "type":"address",
+            "isRequired":true
+          }
+        ]
+      }
+    ]
+  }
+
+}

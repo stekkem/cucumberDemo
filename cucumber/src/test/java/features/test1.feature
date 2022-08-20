@@ -23,6 +23,16 @@ Feature: Get all repositories from github
       |19      |https://reqres.in/|test.json |/api/users/2|
       |20      |https://reqres.in/|test1.json |/api/users/2|
 
+# post call example with dynamic payload build from json template file - site used for testing: https://reqres.in/
+
+  Scenario Outline: <testId> post call with two key value pairs
+    Given when user makes an api call using <URL>
+    When a post request sent with dynamic payload <payload> from file to <request>
+    Then verify github post call response
+    Examples:
+      |testId   | URL              |payload    | request    |
+      |19d      |https://reqres.in/|test.json |/api/users/2|
+      |20d      |https://reqres.in/|test1.json |/api/users/2|
 
 # get call example with payload from text file - site used for testing: https://reqres.in/
     # compare call response with expected payload in file

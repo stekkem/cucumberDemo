@@ -12,6 +12,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.SpecificationQuerier;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -245,21 +246,65 @@ public class myStepdefs {
         // method for post where payload comes from a file
         String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+payloadFile);
         System.out.println("payload in file " + payloadFile + " is: " + payload);
-        try {
-            payload = commonMethods.generateDynamicPayloadNew(payloadFile);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .and()
                 .body(payload)
                 .when()
                 .post(req);
+        System.out.println("################################## response body JSON payload key/value pairs: ##################################");
+        try {
+            JSONObject json = new JSONObject(response.getBody().asString());
+            JSONArray keys = commonMethods.printResponseJSONObjects(json);
+        } catch(JSONException ex) {
+            System.out.println("exception: " + ex);
+        }
+/*
         System.out.println(response.jsonPath().getString("name"));
         System.out.println(response.jsonPath().getString("job"));
         System.out.println(response.jsonPath().getString("id"));
         System.out.println(response.jsonPath().getString("createdAt"));
+
+ */
+    }
+
+    @When("^a post request sent with dynamic payload (.*) from file to (.*)$")
+    public void aPostRequestSentWithDynamicPayloadPayloadFromFileToRequest(String payloadFile, String req) throws JSONException {
+        // method for post where payload comes from a file
+        String payload;
+        //String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+payloadFile);
+        //System.out.println("payload in file " + payloadFile + " is: " + payload);
+        payload = commonMethods.generateDynamicPayloadOrg(payloadFile);
+        payload = commonMethods.generateDynamicPayloadRegEx(payload);
+        System.out.println("################################## input JSON payload: ##################################");
+        try {
+            JSONObject json = new JSONObject(payload);
+            JSONArray keys = commonMethods.printResponseJSONObjects(json);
+        } catch(JSONException ex) {
+            System.out.println("exception: " + ex);
+        }
+
+        response = given()
+                .header("Content-type", commonValues.contentType)
+                .and()
+                .body(payload)
+                .when()
+                .post(req);
+        System.out.println("################################## response body JSON payload key/value pairs: ##################################");
+        try {
+            JSONObject json = new JSONObject(response.getBody().asString());
+            JSONArray keys = commonMethods.printResponseJSONObjects(json);
+        } catch(JSONException ex) {
+            System.out.println("exception: " + ex);
+        }
+        /*
+        System.out.println(response.jsonPath().getString("name"));
+        System.out.println(response.jsonPath().getString("job"));
+        System.out.println(response.jsonPath().getString("id"));
+        System.out.println(response.jsonPath().getString("createdAt"));
+
+         */
     }
 
     @Then("^verify response payload from file (.*) and ignore keys (.*)$")

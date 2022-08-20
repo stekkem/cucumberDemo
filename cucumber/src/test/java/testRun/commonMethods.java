@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import io.cucumber.cucumberexpressions.TypeReference;
 import io.cucumber.messages.internal.com.google.gson.Gson;
+import io.cucumber.messages.internal.com.google.gson.JsonParser;
 import io.cucumber.messages.internal.com.google.gson.stream.JsonReader;
 import io.restassured.mapper.ObjectMapperDeserializationContext;
 import io.restassured.mapper.ObjectMapperSerializationContext;
@@ -14,6 +15,7 @@ import org.skyscreamer.jsonassert.*;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,26 +48,6 @@ public class commonMethods {
         }
     }
 
-    // method to loop thru JSON and print key/value pairs - no example in framework
-    public static void printResponseJSONObjects(JSONObject actualResponse) throws JSONException {
-
-        // uncomment "printResponseJSON(inputStr);" in isValidJSON method to print array details
-        JSONObject obj = new JSONObject((Map) actualResponse);
-        // Loop using obj
-        for(int i = 0; i < obj.names().length(); i++){
-
-             System.out.println("key["+ i + "]=" + obj.names().getString(i) + "; value[" + i + "]=" + obj.get(obj.names().getString(i)));
-        }
-        //Loop using array
-        JSONArray keys = obj.names ();
-
-        for (int i = 0; i < keys.length(); i++) {
-
-            String key = keys.getString (i); // Here's your key
-            String value = obj.getString (key); // Here's your value
-            System.out.println("key["+ i + "]=" + key + "; value[" + i + "]=" + value);
-        }
-    }
     // Method to look for a pattern in the input string and return true/false - no example in framework
     public static boolean findRegEx(String input, String rpattern) {
         // Compile regular expression
@@ -234,24 +217,101 @@ public class commonMethods {
     }
 //############################################################################################################################################################################################################
 // Dynamic payload generation
-    public static class newUser {
-        public String name = null;
-        public String job = null;
+
+
+    // method to loop thru JSON and print key/value pairs - no example in framework
+    public static JSONArray printResponseJSONObjects(JSONObject actualResponse) throws JSONException {
+
+        // uncomment "printResponseJSON(inputStr);" in isValidJSON method to print array details
+        //JSONObject obj = new JSONObject((Map) actualResponse);
+
+        // Loop using obj
+        for(int i = 0; i < actualResponse.names().length(); i++){
+
+            System.out.println("key["+ i + "]=" + actualResponse.names().getString(i) + "; value[" + i + "]=" + actualResponse.get(actualResponse.names().getString(i)));
+        }
+        //Loop using array
+        JSONArray keys = actualResponse.names ();
+        // for loop above prints the same key/value pairs. code below is for looping thru an array. commented to avoid duplicate logs
+        /*
+        for (int i = 0; i < keys.length(); i++) {
+
+            String key = keys.getString (i); // Here's your key
+            String value = actualResponse.getString (key); // Here's your value
+            System.out.println("key["+ i + "]=" + key + "; value[" + i + "]=" + value);
+        }
+
+         */
+        return keys;
     }
 
-    public static String generateDynamicPayloadNew(String fileName) throws JSONException {
-        // get sample payload from a json file
-        fileName = commonValues.jsonFilePath + fileName;
-        String gitJson = commonMethods.readFileIntoVariable(fileName);
-        Gson gson = new Gson();
-        newUser newuser = gson.fromJson(gitJson, newUser.class);
-        newUser newusr = new newUser();
-        newusr.name = "dynamicUser" + Math.random();
-        newusr.job = "dynamicJob" + Math.random();
-        Gson dgson = new Gson();
-        String dJson = dgson.toJson(newusr);
-        System.out.println(dJson);
-        return dJson;
+
+    public static String generateDynamicPayloadOrg(String fileName) throws JSONException, JSONException {
+        String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+fileName);
+        System.out.println("payload in file " + fileName + " is: " + payload);
+
+        JSONObject json = new JSONObject(payload);
+        JSONObject newjson = new JSONObject();
+        JSONArray arrayNames = commonMethods.printResponseJSONObjects(json);
+        System.out.println("arrays in payload: " + arrayNames.toString());
+        boolean isJsonObject = false;
+        boolean isJsonArray = false;
+       // JSONArray tempArray = json.getJSONArray("marketingDatabasesDefinition");
+       // System.out.println(json.getJSONArray("marketingDatabasesDefinition"));
+        JSONObject subJson = new JSONObject();
+        JSONArray subArray = new JSONArray();
+        for(int i = 0; i < json.names().length(); i++){
+
+            String key = json.names().getString(i);
+            String value = String.valueOf(json.get(json.names().getString(i)));
+
+            if ( value.equals("true") || value.equals("false") || value.contains("http") || value.matches("[0-9]+")
+                        || key.contains("date") || key.contains("time") || key.contains("id") || value.contains("\\") || value.contains("{[")
+                        || value.contains("[") || value.contains("{\\") || value.contains("{") || value.contains(":{")    ){
+                    value = value;
+                    newjson.put(key, value);
+                }else {
+                    value = value + Math.random();
+                    newjson.put(key, value);
+            }
+        }
+
+        return newjson.toString();
+    }
+
+
+    public static String generateDynamicPayloadRegEx(String payload){
+        String dynamicPayload = "";
+       // String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+fileName);
+       // System.out.println("payload in file " + fileName + " is: " + payload);
+        int min = 0;
+        int max = 0;
+
+        //Generate random int value from 50 to 100
+        dynamicPayload = payload;
+        int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+        String[] vowelArray = new String[]{"a", "e", "i", "o","u"};
+        for(int i=0; i<10; i++){
+            min=1;
+            max=9;
+            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
+        }
+        for(int i=11; i<100; i++){
+            min=10;
+            max=99;
+            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
+        }
+        for(int i=100; i<1000; i++){
+            min=101;
+            max=999;
+            random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+            dynamicPayload = dynamicPayload.replaceAll(String.valueOf(i), String.valueOf(random_int));
+        }
+
+
+        return dynamicPayload;
     }
 //############################################################################################################################################################################################################
 }
