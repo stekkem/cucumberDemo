@@ -13,14 +13,15 @@ Feature: Get all repositories from github
       |000    |http://api.github.com |  /user/repos   | 200 |git://github.com/stekkem/cucumberDemo.git     |stekkem     |owner.login       |0|
 
 # post call example with payload from text file - site used for testing: https://reqres.in/
+
   Scenario Outline: <testId> post call with two key value pairs
     Given when user makes an api call using <URL>
     When a post request sent with payload <payload> from file to <request>
     Then verify github post call response
     Examples:
       |testId  | URL              |payload    | request    |
-      |19      |https://reqres.in/|test19.txt |/api/users/2|
-      |20      |https://reqres.in/|test20.txt |/api/users/2|
+      |19      |https://reqres.in/|test.json |/api/users/2|
+      |20      |https://reqres.in/|test1.json |/api/users/2|
 
 
 # get call example with payload from text file - site used for testing: https://reqres.in/

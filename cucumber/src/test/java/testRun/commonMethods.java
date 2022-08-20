@@ -1,8 +1,12 @@
 package test.java.testRun;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import groovyjarjarantlr4.v4.runtime.misc.Nullable;
+import io.cucumber.cucumberexpressions.TypeReference;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.cucumber.messages.internal.com.google.gson.stream.JsonReader;
+import io.restassured.mapper.ObjectMapperDeserializationContext;
+import io.restassured.mapper.ObjectMapperSerializationContext;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,4 +221,37 @@ public class commonMethods {
         }
         return destFile;
     }
+    //
+    public static class gitUser {
+        private String name = null;
+        private String job = null;
+
+        public String getName() { return this.name; }
+        public void   setName(String name){ this.name = name;}
+
+        public String getJob() { return this.job; }
+        public void   setJob(String job){ this.job = job;}
+    }
+//############################################################################################################################################################################################################
+// Dynamic payload generation
+    public static class newUser {
+        public String name = null;
+        public String job = null;
+    }
+
+    public static String generateDynamicPayloadNew(String fileName) throws JSONException {
+        // get sample payload from a json file
+        fileName = commonValues.jsonFilePath + fileName;
+        String gitJson = commonMethods.readFileIntoVariable(fileName);
+        Gson gson = new Gson();
+        newUser newuser = gson.fromJson(gitJson, newUser.class);
+        newUser newusr = new newUser();
+        newusr.name = "dynamicUser" + Math.random();
+        newusr.job = "dynamicJob" + Math.random();
+        Gson dgson = new Gson();
+        String dJson = dgson.toJson(newusr);
+        System.out.println(dJson);
+        return dJson;
+    }
+//############################################################################################################################################################################################################
 }

@@ -35,6 +35,10 @@ public class myStepdefs {
 
     @Given("^when user makes a api call using url from commonValues")
     public void whenUserMakesAPIFromcommonValuesUrl(){
+        // Use this method if the url is defined in commonValues
+        // method will collect url from commonValues class and builds request specification
+        // gets auth token from commonValues and builds request specification
+        // gets headers needed and builds request specification
         RestAssured.baseURI = commonValues.baseUrlGit;
         request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
         // uncomment code below to print request details in the logs
@@ -50,12 +54,20 @@ public class myStepdefs {
     }
     @Given("^when user makes an api call getting url from config file (.*)$")
     public void whenUserMakesAnApiCallGettingUrlFromConfigFileProperty(String property) {
+        // Use this method if the url is collected from config.properties
+        // method will collect url from commonValues class and builds request specification
+        // gets auth token from commonValues and builds request specification
+        // gets headers needed and builds request specification
         String propertyVal = commonMethods.getCofingProperty(property);
         RestAssured.baseURI = propertyVal;
         request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
     }
     @Given("^when user makes an api call using (.*)")
-    public void whenUserTriesToGetRepositoriesFromURL(String url) {
+    public void whenUserTriesToGetRepositoriesFromURL(String url) throws JSONException {
+        // Use this method if the url passed as a variable in cucumber test case
+        // method will collect url from commonValues class and builds request specification
+        // gets auth token from commonValues and builds request specification
+        // gets headers needed and builds request specification
        RestAssured.baseURI = url;
        request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
 
@@ -83,21 +95,24 @@ public class myStepdefs {
     }
     @And("^passes authentication token with requests (.*)$")
     public void passesAuthenticationTokenWithRequestsToken(String token) {
+        // Method to add auth token and header to the request
         request = given().auth().oauth2(commonValues.token).accept(commonValues.accept_git);
     }
 
     @When("^call made with api path (.*)$")
     public void gitReturnsTheRepositories(String path) throws JSONException {
+        // method to make a GET call and collect response of get into variable
         response = request.get(path).then().extract().response();
-        // uncomment code below to print request details in the logs
 
+        // uncomment code below to print request details in the logs
+/*
         QueryableRequestSpecification queryable = SpecificationQuerier.query(request);
         System.out.println("getHeaders is: " + queryable.getHeaders().get("x-api-key"));
         System.out.println("getBaseUri is: " + queryable.getBaseUri());
         System.out.println("getBasePath is: " + queryable.getBasePath());
         System.out.println("getURI is: " + queryable.getURI());
         System.out.println("getMethod is: " + queryable.getMethod());
-
+*/
 
         String jsonStr = response.getBody().asString();
 
@@ -124,6 +139,7 @@ public class myStepdefs {
     }
     @Then("^check payload value of (.*) is (.*)$")
     public void checkPayloadValueOfKey(String key, String eVal) throws JSONException {
+        //case when array location is not specified, method assings some random location for future logic
         int location = 99999;
         String aVal = JSONParseKey(key, location);
         Assert.assertEquals(eVal,aVal);
@@ -146,6 +162,8 @@ public class myStepdefs {
 
     @Then("^verify key (.*) has value (.*) using jsonpath$")
     public void verifyKeyValuePairUsingJsonPath(String key, String eVal) {
+        // Method to assert key/value pair using jsonpath
+
         JsonPath jp = response.jsonPath();
         Assert.assertEquals(eVal.toString(), jp.get(key).toString());
         // another way to check value of a key
@@ -155,6 +173,7 @@ public class myStepdefs {
 
     @And("^a post call is made with (.*) to (.*)$")
     public void usingKeyAndValuePayload(String payload, String req) throws JSONException {
+        // methods for post call
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .and()
@@ -174,6 +193,7 @@ public class myStepdefs {
 
     @When("^a put call is made with (.*) to (.*)$")
     public void aPutCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
+        // method for put call
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .and()
@@ -188,6 +208,7 @@ public class myStepdefs {
     }
     @When("^a patch call is made with (.*) to (.*)$")
     public void aPatchCallIsMadeWithPayloadToRequest(String payload, String req) throws JSONException {
+        //method for patch call
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .and()
@@ -207,6 +228,7 @@ public class myStepdefs {
     }
     @When("^a delete call is made with (.*)$")
     public void aDeleteCallIsMadeWithPayloadToRequest(String req) throws JSONException {
+        // method for delete call
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .when()
@@ -220,18 +242,30 @@ public class myStepdefs {
 
     @When("^a post request sent with payload (.*) from file to (.*)$")
     public void aPostRequestSentWithPayloadPayloadFromFileToRequest(String payloadFile, String req) {
-        String payload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+payloadFile);
+        // method for post where payload comes from a file
+        String payload = commonMethods.readFileIntoVariable(commonValues.jsonFilePath+payloadFile);
         System.out.println("payload in file " + payloadFile + " is: " + payload);
+        try {
+            payload = commonMethods.generateDynamicPayloadNew(payloadFile);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         response = given()
                 .header("Content-type", commonValues.contentType)
                 .and()
                 .body(payload)
                 .when()
                 .post(req);
+        System.out.println(response.jsonPath().getString("name"));
+        System.out.println(response.jsonPath().getString("job"));
+        System.out.println(response.jsonPath().getString("id"));
+        System.out.println(response.jsonPath().getString("createdAt"));
     }
 
     @Then("^verify response payload from file (.*) and ignore keys (.*)$")
     public void verifyResponsePayloadFromFileResponseFile(String expFile, String ignoreKeys) throws JSONException {
+        // method to verify entire response payload, expected payload is collected from file
+
         String ePayload = commonMethods.readFileIntoVariable(commonValues.dataFilePath+expFile);
         String aPayload = response.getBody().asString();
         //System.out.println("expected payload is: " + ePayload);
