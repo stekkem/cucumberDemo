@@ -12,7 +12,7 @@ public class jsonParser {
                 "        {\n" +
                 "            \"MainId\": 1211,\n" +
                 "            \"firstName\": \"Sherlock\",\n" +
-                "            \"lastName\": \"Homes\",\n" +
+                "            \"MainId\": \"Homes\",\n" +
                 "            \"categories\": [\n" +
                 "                {\n" +
                 "                    \"CategoryID\": 1,\n" +
@@ -37,7 +37,7 @@ public class jsonParser {
                 "            \"lastName\": \"Bond\",\n" +
                 "            \"categories\": [\n" +
                 "                {\n" +
-                "                    \"CategoryID\": 2,\n" +
+                "                    \"CategoryID\": 3,\n" +
                 "                    \"CategoryName\": \"Bond Example3\"\n" +
                 "                }\n" +
                 "            ]\n" +
@@ -48,7 +48,7 @@ public class jsonParser {
                 "            \"lastName\": \"Mandela\",\n" +
                 "            \"categories\": [\n" +
                 "                {\n" +
-                "                    \"CategoryID\": 2,\n" +
+                "                    \"CategoryID\": 4,\n" +
                 "                    \"CategoryName\": \"Nelson Example4\"\n" +
                 "                }\n" +
                 "            ]\n" +
@@ -56,44 +56,43 @@ public class jsonParser {
                 "    ]\n" +
                 "}";
         JSONObject jsonObject = new JSONObject(inputJsonStr);
-        getValuesforKey(jsonObject, "CategoryName");
+        getValuesforKey(jsonObject, "firstName");
 
     }
+
     public static void getValuesforKey(JSONObject jsonObject, String key) throws JSONException {
         String returnedValues = "";
         // check if key is present at root level
         boolean keyExists = jsonObject.has(key);
+
         Iterator<?> jsonKeys;
         String nxt;
         // if key not found at root level
-        if (!keyExists) {
+        if (keyExists) {
+            returnedValues = returnedValues + String.valueOf(jsonObject.get(key));
+
+        } else {
             jsonKeys = jsonObject.keys();
             while (jsonKeys.hasNext()) {
                 nxt = String.valueOf(jsonKeys.next());
                 try {
                     if (jsonObject.get(nxt) instanceof JSONObject) {
-                        if (!keyExists) {
-                            getValuesforKey(jsonObject.getJSONObject(nxt), key);
-                        }
+                        getValuesforKey(jsonObject.getJSONObject(nxt), key);
                     } else if (jsonObject.get(nxt) instanceof JSONArray) {
                         JSONArray jsonarray = jsonObject.getJSONArray(nxt);
                         for (int innerLoop = 0; innerLoop < jsonarray.length(); innerLoop++) {
                             String jsonString = jsonarray.get(innerLoop).toString();
                             JSONObject innerJson = new JSONObject(jsonString);
-                            if (!keyExists) {
-                                getValuesforKey(innerJson, key);
-                            }
+                            getValuesforKey(innerJson, key);
                         }
                     }
                 } catch (Exception e) {
                     System.out.println("Exception: " + e.toString());
                 }
             }
-
-        } else {
-            returnedValues = returnedValues + String.valueOf(jsonObject.get(key));
         }
         System.out.println(returnedValues);
+
     }
 
 }
