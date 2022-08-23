@@ -132,5 +132,10 @@ public class jsonParser {
         //myStepdefs.response.then().assertThat().body(key, Matchers.notNullValue());
         return returnedValues;
     }
+    /*
+    public static void jsonGeneratorFromSchema(String fileName){
+        Schema schema = new SchemaV4().wrap(JsonElement.readFrom("{the schema}"));
+    }
 
+     */
 }
