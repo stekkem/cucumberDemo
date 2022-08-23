@@ -37,12 +37,12 @@ necessary dependencies are added in pom.xml. there shouldn't be any changes nece
 
 **other helpful tips**
 
-6. some common methods do not have a test case, but might work as is or with very little tweaks
-7. set runTest tag to @mytest run the complete suite
-8. test.feature file has a test for debugging purpose. to run just one test to debug, update Example, set tag in runTest to @debug
-9. framework has examples for POST, PUT, PATCH, GET, DELETE
-10. add any specific headers that might apply to your application in commonValues class
-11. there is a function/method to read values from config.properties, hence can add properties here
+7. some common methods do not have a test case, but might work as is or with very little tweaks.
+8. set runTest.class tag to @mytest run the complete suite
+9. test.feature file has a test for debugging purpose. to run just one test to debug, update Example, set tag in runTest to @debug
+10. framework has examples for POST, PUT, PATCH, GET, DELETE
+11. add any specific headers that might apply to your application in commonValues class
+12. there is a function/method to read values from config.properties, hence can add properties here
     update path to config.properties in commonValues
 12. some common functions/methods have samples on how to call them. these are run with @debug tag
 13. pom.xml should have all the dependencies to run the tests in this framework. you might have to add dependencies if needed for other applications
