@@ -7,11 +7,14 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.SpecificationQuerier;
+import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,11 +23,14 @@ import org.skyscreamer.jsonassert.JSONCompareResult;
 import test.java.testRun.commonMethods;
 import test.java.testRun.commonValues;
 import test.java.testRun.statusCode;
-
+import test.java.testRun.*;
+import java.lang.reflect.InvocationTargetException;
 import java.io.File;
 import java.util.List;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.requestSpecification;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static io.restassured.module.jsv.JsonSchemaValidatorSettings.settings;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -32,7 +38,7 @@ public class myStepdefs {
 
 
     RequestSpecification request;
-    Response response;
+    public static Response response;
 
     @Given("^when user makes a api call using url from commonValues")
     public void whenUserMakesAPIFromcommonValuesUrl(){
@@ -187,9 +193,8 @@ public class myStepdefs {
         Assert.assertEquals(statusCode.sc_ok, response.getStatusCode());
     }
     @When("^verify github post call response")
-    public void verifygithubpost201callresponse() {
+    public void verifygithubpost201callresponse() throws JSONException {
         Assert.assertEquals(statusCode.sc_post, response.getStatusCode());
-
     }
 
     @When("^a put call is made with (.*) to (.*)$")
@@ -316,9 +321,9 @@ public class myStepdefs {
         //System.out.println("expected payload is: " + ePayload);
         //System.out.println("actual payload is  : " + aPayload);
         if (commonMethods.isValidJSON(ePayload)){
-            System.out.println("JSON EXPECTED is valid");
+           // System.out.println("JSON EXPECTED is valid");
             if(commonMethods.isValidJSON(aPayload)){
-                System.out.println("JSON ACTUAL is valid");
+               // System.out.println("JSON ACTUAL is valid");
                 JSONCompareResult result = commonMethods.compareMyJSON(ePayload, aPayload,ignoreKeys);
                 commonMethods.verifyJSONCompareResponse(result, ePayload, aPayload);
             }else {
@@ -328,6 +333,20 @@ public class myStepdefs {
             System.out.println("invalid JSON " + ePayload);
         }
 
+    }
+
+    @Then("^compare schema structure of response with (.*)$")
+    public void verifySchemaStructureOfResponseSchemaFile(String jsonSchemaFile) {
+            //response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchema(new File(commonValues.jsonFilePath + jsonSchemaFile)));
+            response.then().assertThat().statusCode(200).body(JsonSchemaValidator.matchesJsonSchema(new File(commonValues.jsonFilePath + jsonSchemaFile)));
+
+    }
+
+    @Then("^verify value of a key is not null (.*)$")
+    public void verifyValueOfAKeyIsNotNull(String keyName) throws JSONException {
+        JSONObject jsonObject = new JSONObject(myStepdefs.response.getBody().asString());
+        //jsonParser.getValuesforKey(jsonObject, keyName);
+        jsonParser.verifyKeyIsNotNull(keyName);
     }
 
 

@@ -1,4 +1,4 @@
-@mytest1
+
 Feature: Get all repositories from github
 @debug # use debug tag in runTest.java to debug any single case using the scenario below
   # multiple arrays in response payload
@@ -59,3 +59,18 @@ Feature: Get all repositories from github
     Examples:
       |testId  |configProperty  | path        | code | responseFile | ignoreKeys |
       |22      |reqresURL       |/api/users/5 | 200  | test22R.txt  |            |
+
+  @mytest1
+# test case has step to verify structure of the payload, ignoring values
+    #test case has step to verify a key is not null
+  Scenario Outline: <testId> post call with two key value pairs
+    Given when user makes an api call using <URL>
+    When call made with api path <path>
+    Then validate the response code is <code>
+    Then verify response payload from file <responseFile> and ignore keys <ignoreKeys>
+    Then compare schema structure of response with <schemaFile>
+    Then verify value of a key is not null <key>
+    Examples:
+      |testId  |URL                | path        | code | responseFile | ignoreKeys |schemaFile   |key       |
+      |23      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema.json |first_name|
+      |24      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema1.json|last_name |

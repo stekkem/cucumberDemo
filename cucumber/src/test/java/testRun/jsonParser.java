@@ -1,9 +1,16 @@
 package test.java.testRun;
+import io.restassured.module.jsv.JsonSchemaValidator;
+import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
-import java.util.Iterator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.Assert;
+import test.java.stepDefinitions.myStepdefs;
 public class jsonParser {
     // parse nested JSON
     public static void main(String[] args) throws JSONException {
@@ -22,7 +29,7 @@ public class jsonParser {
                 "        },\n" +
                 "        {\n" +
                 "            \"MainId\": 1222,\n" +
-                "            \"firstName\": \"James\",\n" +
+                "            \"firstName\": \"Gregg\",\n" +
                 "            \"lastName\": \"Watson\",\n" +
                 "            \"categories\": [\n" +
                 "                {\n" +
@@ -56,12 +63,16 @@ public class jsonParser {
                 "    ]\n" +
                 "}";
         JSONObject jsonObject = new JSONObject(inputJsonStr);
-        getValuesforKey(jsonObject, "firstName");
+        int itemsFound=0;
+        List<String> myValues = new ArrayList<String>();
+        myValues = getValuesforKey(jsonObject, "firstName");
+       // System.out.println(getValuesforKey(jsonObject, "data"));
 
     }
-
-    public static void getValuesforKey(JSONObject jsonObject, String key) throws JSONException {
+    public static List getValuesforKey(JSONObject jsonObject, String key) throws JSONException {
         String returnedValues = "";
+
+        //int itemsFound=0;
         // check if key is present at root level
         boolean keyExists = jsonObject.has(key);
 
@@ -69,8 +80,10 @@ public class jsonParser {
         String nxt;
         // if key not found at root level
         if (keyExists) {
-            returnedValues = returnedValues + String.valueOf(jsonObject.get(key));
-
+            returnedValues = String.valueOf(jsonObject.get(key));
+            commonValues.myArray.add(String.valueOf(jsonObject.get(key)));
+            commonValues.itemsFound++;
+            System.out.println(returnedValues);
         } else {
             jsonKeys = jsonObject.keys();
             while (jsonKeys.hasNext()) {
@@ -91,8 +104,20 @@ public class jsonParser {
                 }
             }
         }
-        System.out.println(returnedValues);
+        return commonValues.myArray;
+    }
 
+    public static boolean verifyKeyIsNotNull(String key) throws JSONException {
+        boolean returnedValues = false;
+        // check if key is present at root level
+        JSONObject jsonObject = new JSONObject(myStepdefs.response.getBody().asString());
+        List<String> myValues = new ArrayList<String>();
+        myValues = getValuesforKey(jsonObject, key);
+        for(int lookUp=0; lookUp< myValues.size(); lookUp++){
+            Assert.assertFalse(myValues.isEmpty());
+        }
+        //myStepdefs.response.then().assertThat().body(key, Matchers.notNullValue());
+        return returnedValues;
     }
 
 }
