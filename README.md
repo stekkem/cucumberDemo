@@ -22,6 +22,7 @@ projectTest.feature file
     contains basic use cases, verify structure of schema, verify key value pairs, verify values are not null
     
 ==========
+
 **To run tests on your local machine** with minimum changes
 necessary dependencies are added in pom.xml. there shouldn't be any changes necessary to IDE
 
@@ -31,6 +32,7 @@ necessary dependencies are added in pom.xml. there shouldn't be any changes nece
 4. update commonValues.configFile and commonValues.dataFilePath path values to your locations
 5. update repo, path, request variable values that have user/account details in test.feature/test1.feature. change "stekkem" to your account on git
 ==========
+
 **other helpful tips**
 6. some common methods do not have a test case, but might work as is or with very little tweaks
 7. set runTest tag to @mytest run the complete suite
