@@ -119,5 +119,18 @@ public class jsonParser {
         //myStepdefs.response.then().assertThat().body(key, Matchers.notNullValue());
         return returnedValues;
     }
+    public static boolean checkValueOfKey(String key, String eVal) throws JSONException {
+        boolean returnedValues = false;
+        // check if key is present at root level
+        JSONObject jsonObject = new JSONObject(myStepdefs.response.getBody().asString());
+        List<Object> myValues = new ArrayList<Object>();
+        myValues = getValuesforKey(jsonObject, key);
+        for(int lookUp=0; lookUp< myValues.size(); lookUp++){
+            Assert.assertEquals(myValues.get(lookUp), eVal);
+        }
+        myValues.clear();
+        //myStepdefs.response.then().assertThat().body(key, Matchers.notNullValue());
+        return returnedValues;
+    }
 
 }

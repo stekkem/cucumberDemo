@@ -350,4 +350,8 @@ public class myStepdefs {
     }
 
 
+    @Then("^check value of a key (.*) is (.*)$")
+    public void verifyValueOfAKeyValue(String key, String expVal) throws JSONException {
+        jsonParser.checkValueOfKey(key, expVal);
+    }
 }

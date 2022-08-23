@@ -70,7 +70,8 @@ Feature: Get all repositories from github
     Then verify response payload from file <responseFile> and ignore keys <ignoreKeys>
     Then compare schema structure of response with <schemaFile>
     Then verify value of a key is not null <key>
+    Then check value of a key <key> is <value>
     Examples:
-      |testId  |URL                | path        | code | responseFile | ignoreKeys |schemaFile   |key       |
-      |23      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema.json |first_name|
-      |24      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema1.json|last_name |
+      |testId  |URL                | path        | code | responseFile | ignoreKeys |schemaFile   |key       |value |
+      |23      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema.json |first_name|Janet |
+      |24      |https://reqres.in/ |/api/users/2 | 200  | test21R.txt  |            |jschema1.json|last_name |Weaver|
