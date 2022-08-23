@@ -35,6 +35,7 @@ necessary dependencies are added in pom.xml. there shouldn't be any changes nece
 ==========
 
 **other helpful tips**
+
 6. some common methods do not have a test case, but might work as is or with very little tweaks
 7. set runTest tag to @mytest run the complete suite
 8. test.feature file has a test for debugging purpose. to run just one test to debug, update Example, set tag in runTest to @debug
